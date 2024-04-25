@@ -8,13 +8,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
 import java.util.function.IntSupplier;
 import java.util.stream.IntStream;
 
-
+@EnableJpaAuditing
 @SpringBootApplication
 public class RedisSessionClusteringIndexPracticeApplication {
 

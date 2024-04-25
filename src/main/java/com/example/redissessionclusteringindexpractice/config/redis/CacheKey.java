@@ -18,4 +18,8 @@ public class CacheKey {
     public static final String BOARD = "board";
 
     public static final int BOARD_EXPIRE_SEC = 60 * 10; // 10 minutes
+
+    public static final String LIKES = "likes";
+
+    public static final int LIKES_EXPIRED_SEC = 60* 10;
 }

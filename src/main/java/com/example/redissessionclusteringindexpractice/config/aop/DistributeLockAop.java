@@ -35,9 +35,9 @@ public class DistributeLockAop {
 
         String key = REDISSON_KEY_PREFIX + CustomSpringELParser
                 .getDynamicValue(signature.getParameterNames(), joinPoint.getArgs(), distributeLock.key());    // (2)
-
+        log.info(key);
         RLock rLock = redissonClient.getLock(key);    // (3)
-
+        log.info("rLock::"+rLock);
         try {
             boolean available = rLock.tryLock(distributeLock.waitTime(), distributeLock.leaseTime(), distributeLock.timeUnit());    // (4)
             if (!available) {

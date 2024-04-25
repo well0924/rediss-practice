@@ -45,10 +45,8 @@ public class MemberService {
     }
 
     @Transactional
-    public String login(HttpSession session, LoginDto loginDto){
+    public Object login(HttpSession session, LoginDto loginDto){
         Member member = memberRepository.findByUserId(loginDto.getUserId());
-        log.info(member);
-        log.info(bCryptPasswordEncoder.matches(loginDto.getPassword(),member.getPassword()));
 
         //회원객체가 없거나 비밀번호가 일치하지 않는 경우
         if(member==null || !bCryptPasswordEncoder.matches(loginDto.getPassword(),member.getPassword())){
@@ -56,10 +54,13 @@ public class MemberService {
         }
         //아닌 경우에는 세션에 회원객체를 저장한다.
         session.setAttribute("member",member);
+        log.info(session.getAttribute("member"));
+        log.info(session.getId());
         return session.getId();
     }
 
     public void logout(HttpSession httpSession){
-       httpSession.removeAttribute("member");
+        httpSession.removeAttribute("member");
     }
+
 }

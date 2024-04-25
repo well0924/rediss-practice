@@ -31,4 +31,5 @@ public class AuthAspect {
             throw new AuthenticationException("로그인이 필요합니다.");
         }
     }
+
 }

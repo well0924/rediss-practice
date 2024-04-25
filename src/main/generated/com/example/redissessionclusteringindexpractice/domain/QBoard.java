@@ -22,13 +22,20 @@ public class QBoard extends EntityPathBase<Board> {
 
     public static final QBoard board = new QBoard("board");
 
+    public final QBaseEntity _super = new QBaseEntity(this);
+
     public final StringPath author = createString("author");
 
     public final StringPath contents = createString("contents");
 
-    public final DateTimePath<java.time.LocalDateTime> createdTime = createDateTime("createdTime", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> createdTime = _super.createdTime;
 
     public final NumberPath<Long> id = createNumber("id", Long.class);
+
+    public final NumberPath<Long> likedCount = createNumber("likedCount", Long.class);
+
+    public final SetPath<Likes, QLikes> likes = this.<Likes, QLikes>createSet("likes", Likes.class, QLikes.class, PathInits.DIRECT2);
 
     public final QMember member;
 
@@ -36,7 +43,8 @@ public class QBoard extends EntityPathBase<Board> {
 
     public final StringPath title = createString("title");
 
-    public final DateTimePath<java.time.LocalDateTime> updatedTime = createDateTime("updatedTime", java.time.LocalDateTime.class);
+    //inherited
+    public final DateTimePath<java.time.LocalDateTime> updatedTime = _super.updatedTime;
 
     public QBoard(String variable) {
         this(Board.class, forVariable(variable), INITS);

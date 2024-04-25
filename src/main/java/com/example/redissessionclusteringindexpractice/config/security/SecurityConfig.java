@@ -23,8 +23,14 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private static final String[] PERMIT_URL_ARRAY = {"/api/test",
-            "/api/login","/api/signup","/api/create","/api/logout","/api/check-user","/api/list"
+    private static final String[] PERMIT_URL_ARRAY = {
+            "/api/test",
+            "/api/login",
+            "/api/signup",
+            "/api/create",
+            "/api/logout",
+            "/api/check-user",
+            "/api/list"
     };
 
     @Bean
@@ -44,7 +50,7 @@ public class SecurityConfig {
 
         //form disable
         http.formLogin(AbstractHttpConfigurer::disable);
-        //cors & csrf disable
+        //csrf disable
         http
             .cors(httpSecurityCorsConfigurer -> httpSecurityCorsConfigurer
                     .configurationSource(corsConfigurationSource()))
@@ -54,9 +60,9 @@ public class SecurityConfig {
         //세션을 스프링이 아닌 redis에서 관리를 하므로 세션을 끈다.
         http
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .exceptionHandling(exceptionHandling -> exceptionHandling.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(exceptionHandling -> exceptionHandling
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .addFilterBefore(new AuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
 

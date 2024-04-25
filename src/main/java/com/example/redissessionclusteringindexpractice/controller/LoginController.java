@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 import static java.util.Objects.isNull;
 
@@ -49,8 +50,7 @@ public class LoginController {
     //loginResult 는 sessionId
     @PostMapping("/login")
     public ResponseEntity<?>login(@RequestBody LoginDto loginDto, HttpSession session){
-        String loginResult = memberService.login(session,loginDto);
-        return new ResponseEntity<>(loginResult, HttpStatus.OK);
+        return new ResponseEntity<>(memberService.login(session,loginDto), HttpStatus.OK);
     }
 
     @PostMapping("/logout")
@@ -63,7 +63,7 @@ public class LoginController {
     @GetMapping("/check-user")
     public ResponseEntity<?>memberCheck(HttpSession httpSession){
         String result;
-        Member member;
+        Member member = new Member();
         Object currentUser = httpSession.getAttribute("member");
         String id = httpSession.getId();
         log.info(currentUser);
@@ -76,7 +76,7 @@ public class LoginController {
             log.info(id);
             log.info(httpSession.getAttribute("member"));
         }
-        return new ResponseEntity<>(result,HttpStatus.OK);
+        return new ResponseEntity<>(member,HttpStatus.OK);
     }
 
     @GetMapping("/test")

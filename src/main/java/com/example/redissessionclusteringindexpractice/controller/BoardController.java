@@ -1,6 +1,7 @@
 package com.example.redissessionclusteringindexpractice.controller;
 
 import com.example.redissessionclusteringindexpractice.config.aop.CheckedLogin;
+import com.example.redissessionclusteringindexpractice.config.redis.CacheKey;
 import com.example.redissessionclusteringindexpractice.domain.Board;
 import com.example.redissessionclusteringindexpractice.domain.Member;
 import com.example.redissessionclusteringindexpractice.domain.dto.BoardRequest;
@@ -9,6 +10,8 @@ import com.example.redissessionclusteringindexpractice.service.BoardService;
 import jakarta.servlet.http.HttpSession;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -49,6 +52,7 @@ public class BoardController {
     }
 
     @GetMapping("/{id}")
+    @Cacheable(value = CacheKey.BOARD,key = "#boardId",unless = "#result == null")
     public ResponseEntity<?>boardDetail(@PathVariable("id")Long id,HttpSession httpSession){
         Object currentUser = httpSession.getAttribute("member");
         if (currentUser!=null){
@@ -73,7 +77,21 @@ public class BoardController {
     }
 
     @CheckedLogin
+    @PutMapping("/{id}")
+    public ResponseEntity<?>boardUpdate(@PathVariable("id")Long boardId,
+                                        Member member,@RequestBody BoardRequest request, HttpSession session){
+        Object currentUser = session.getAttribute("member");
+
+        if(currentUser!=null){
+            Long updateResult = boardService.boardUpdate(boardId,request,member);
+            return new ResponseEntity<>(updateResult,HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+    }
+
+    @CheckedLogin
     @DeleteMapping("/{id}")
+    @CacheEvict(value = CacheKey.BOARD,key = "#boardId")
     public ResponseEntity<?>boardDelete(@PathVariable(value ="id")Long boardId, Member member,HttpSession session){
         Object currentUser = session.getAttribute("member");
 

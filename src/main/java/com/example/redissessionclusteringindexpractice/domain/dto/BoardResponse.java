@@ -19,6 +19,7 @@ public class BoardResponse implements Serializable {
     private String author;
     private String contents;
     private Long readCount;
+    private Long likedCount;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdTime;
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
@@ -32,7 +33,15 @@ public class BoardResponse implements Serializable {
         this.author = board.getMember().getUserId();
         this.contents = board.getContents();
         this.readCount = board.getReadCount();
+        this.likedCount = board.getLikedCount();
         this.createdTime = board.getCreatedTime();
         this.updatedTime = board.getUpdatedTime();
+    }
+
+    public static BoardResponse toResponse(Board board){
+        return BoardResponse
+                .builder()
+                .board(board)
+                .build();
     }
 }
