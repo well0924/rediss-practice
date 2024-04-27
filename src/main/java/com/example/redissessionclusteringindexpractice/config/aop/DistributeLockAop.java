@@ -11,12 +11,14 @@ import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 
 @Log4j2
 @Aspect
+@Order(1)
 @Component
 @RequiredArgsConstructor
 public class DistributeLockAop {

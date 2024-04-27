@@ -8,15 +8,16 @@ import com.example.redissessionclusteringindexpractice.repository.BoardRepositor
 import com.example.redissessionclusteringindexpractice.repository.LikesRepository;
 import com.example.redissessionclusteringindexpractice.repository.MemberRepository;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 @Log4j2
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class LikeCountService {
 
     private final LikesRepository likesRepository;
@@ -27,18 +28,12 @@ public class LikeCountService {
 
     @DistributeLock(key = "#key")
     public void likePlus(String key,Long memberId,Long boardId){
-        Board board = boardRepository.getBoardById(boardId);
-        Member member = memberRepository.findById(memberId).get();
-        board.likeUp();
-        log.info("likeCount:::"+board.getLikedCount());
-        log.info("likes:::"+board.getLikes().size());
-        Likes likes = Likes
-                .builder()
-                .board(board)
-                .member(member)
-                .createdTime(LocalDateTime.now())
-                .updatedTime(LocalDateTime.now())
-                .build();
+        Optional<Board> board = boardRepository.findById(boardId);
+        board.get().likeUp();
+        Optional<Member> member = memberRepository.findById(memberId);
+        log.info("likeCount:::"+board.get().getLikedCount());
+        log.info("likes:::"+board.get().getLikes().size());
+        Likes likes = new Likes(member.get(),board.get());
         log.info("????:::"+likes.toString());
         likesRepository.save(likes);
     }

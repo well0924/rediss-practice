@@ -1,9 +1,7 @@
 package com.example.redissessionclusteringindexpractice.service;
 
 import com.example.redissessionclusteringindexpractice.config.redis.CacheKey;
-import com.example.redissessionclusteringindexpractice.config.redis.DistributeLock;
 import com.example.redissessionclusteringindexpractice.domain.Board;
-import com.example.redissessionclusteringindexpractice.domain.Likes;
 import com.example.redissessionclusteringindexpractice.domain.Member;
 import com.example.redissessionclusteringindexpractice.repository.BoardRepository;
 import com.example.redissessionclusteringindexpractice.repository.LikesRepository;
@@ -34,7 +32,9 @@ public class LikesService {
 
     //좋아요 증가
     public void likPlus(Long boardId, Long memberId){
+        log.info("service");
         String key = CacheKey.LIKES+":"+boardId;
+        log.info("key??:::"+key);
         likeCountService.likePlus(key,memberId,boardId);
     }
 
