@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -29,12 +30,13 @@ public class LikeCountService {
     @DistributeLock(key = "#key")
     public void likePlus(String key,Long memberId,Long boardId){
         Optional<Board> board = boardRepository.findById(boardId);
-        board.get().likeUp();
         Optional<Member> member = memberRepository.findById(memberId);
+        board.get().likeUp();
         log.info("likeCount:::"+board.get().getLikedCount());
         log.info("likes:::"+board.get().getLikes().size());
         Likes likes = new Likes(member.get(),board.get());
-        log.info("????:::"+likes.toString());
+        log.info("????:::"+likes);
+        //boardRepository.likeUp(boardId);
         likesRepository.save(likes);
     }
 
